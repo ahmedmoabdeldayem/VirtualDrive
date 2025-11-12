@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  GSDML 2.35 device description for VirtualDrive
+  VendorID: 0x1234  DeviceID: 0x0001
+
+  Module layout (Slot 0 = DAP, Slot 1 = Drive IO):
+    Output data (controller -> device, 6 bytes):
+      Offset 0: ControlWord  Unsigned16 (CiA 402)
+      Offset 2: TargetSpeed  Float32    (RPM, IEEE 754)
+
+    Input data (device -> controller, 10 bytes):
+      Offset 0: StatusWord   Unsigned16 (CiA 402)
+      Offset 2: ActualSpeed  Float32    (RPM)
+      Offset 6: Position     Integer32  (encoder counts)
+-->
+<ISO15745Profile
+    xmlns="http://www.profibus.com/GSDML/2003/11/DeviceProfile"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.profibus.com/GSDML/2003/11/DeviceProfile
+                         http://www.profibus.com/GSDML/2003/11/GSDML-DeviceProfile-V2.35.xsd">
+
+  <ProfileHeader>
+    <ProfileIdentification>PROFINET IO Device Profile</ProfileIdentification>
+    <ProfileRevision>1.00</ProfileRevision>
+    <ProfileName>Device Profile for VirtualDrive</ProfileName>
+    <ProfileSource>VirtualDrive Industries</ProfileSource>
+    <ProfileClassID>Device</ProfileClassID>
+    <ISO15745Reference>
+      <ISO15745Part>4</ISO15745Part>
+      <ISO15745Edition>1</ISO15745Edition>
+      <ProfileTechnology>PROFINET IO</ProfileTechnology>
+    </ISO15745Reference>
+  </ProfileHeader>
+
+  <ProfileBody>
+    <DeviceIdentity>
+      <VendorID Value="0x1234"/>
+      <DeviceID Value="0x0001"/>
+      <InfoText TextId="IDT_InfoText"/>
+      <VendorName Value="VirtualDrive Industries"/>
+    </DeviceIdentity>
+
+    <DeviceFunction>
+      <Family MainFamily="Drives" ProductFamily="VirtualDrive"/>
+    </DeviceFunction>
+
+    <ApplicationProcess>
+
+      <DeviceAccessPointList>
+        <DeviceAccessPoint
+            ID="DAP_1"
+            PNIO_Version="V2.35"
+            PhysicalSlots="0..1"
+            ModuleIdentNumber="0x00000001"
+            MinDeviceInterval="32"
+            DNS_CompatibleName="virtualdrive"
+            FixedInSlots="0"
+            ObjectUUID_LocalIndex="1"
+            DeviceAccessSupported="false"
+            MultipleWriteSupported="true"
+            ResetToFactoryMode="0x0001"
+            NumberOfActivatable="1"
+            MaxInputLength="10"
+            MaxOutputLength="6"
+            CheckDeviceID_Allowed="true"
+            NameOfStationNotTransferable="false">
+
+          <ModuleInfo>
+            <Name TextId="TOK_Name_DAP"/>
+            <InfoText TextId="TOK_InfoText_DAP"/>
+            <VendorName Value="VirtualDrive Industries"/>
+            <OrderNumber Value="VD-001"/>
+            <HardwareRelease Value="V1.0"/>
+            <SoftwareRelease Value="V1.0"/>
+          </ModuleInfo>
+
+          <SubslotList>
+            <Subslot SubslotNumber="32768" TextId="TOK_Sub_Interface" Type="PDEV"/>
+            <Subslot SubslotNumber="32769" TextId="TOK_Sub_Port1"     Type="PDEV_PORT"/>
+          </SubslotList>
+
+          <UseableModules>
+            <ModuleRef ModuleIdentNumber="0x00000002" AllowedInSlots="1"/>
+          </UseableModules>
+
+          <SystemDefinedSubmoduleList>
+            <InterfaceSubmodule
+                SubmoduleIdentNumber="0x00000001"
+                TextId="TOK_Sub_Interface"
+                SubslotNumber="32768"
+                SupportedRT_Classes="RT_CLASS_1"
+                SupportedProtocols="SNMP;LLDP"
+                PTP_BoundaryFlag="false"
+                DCP_BoundaryFlag="false"
+                AddressAssignment="DCP"
+                NetworkLoadClass="NL_HIGH"
+                XMIBPortSetting="false"/>
+            <PortSubmodule
+                SubmoduleIdentNumber="0x00000002"
+                TextId="TOK_Sub_Port1"
+                SubslotNumber="32769"
+                MaxPortTxDelay="100"
+                MaxPortRxDelay="100"
+                CheckPropagationDelay="false"
+                PortConnectionType="Port">
+              <MAUTypeList>
+                <MAUTypeItem Value="30"/>
+              </MAUTypeList>
+            </PortSubmodule>
+          </SystemDefinedSubmoduleList>
+
+        </DeviceAccessPoint>
+      </DeviceAccessPointList>
+
+      <ModuleList>
+        <Module ID="MOD_VD_DRIVE" ModuleIdentNumber="0x00000002">
+          <ModuleInfo>
+            <Name TextId="TOK_Name_DriveModule"/>
+            <InfoText TextId="TOK_InfoText_DriveModule"/>
+          </ModuleInfo>
+          <VirtualSubmoduleList>
+            <VirtualSubmodule
+                ID="VSM_VD_DRIVE_1"
+                SubmoduleIdentNumber="0x00000001"
+                MayIssueProcessAlarm="true">
+              <IOData>
+                <!-- Input: device -> controller, 10 bytes -->
+                <Input Consistency="All items consistency">
+                  <DataItem DataType="Unsigned16" TextId="TOK_StatusWord"  ByteOffset="0"  UseAsBits="false"/>
+                  <DataItem DataType="Float32"    TextId="TOK_ActualSpeed" ByteOffset="2"/>
+                  <DataItem DataType="Integer32"  TextId="TOK_Position"    ByteOffset="6"/>
+                </Input>
+                <!-- Output: controller -> device, 6 bytes -->
+                <Output Consistency="All items consistency">
+                  <DataItem DataType="Unsigned16" TextId="TOK_ControlWord" ByteOffset="0"  UseAsBits="false"/>
+                  <DataItem DataType="Float32"    TextId="TOK_TargetSpeed" ByteOffset="2"/>
+                </Output>
+              </IOData>
+
+              <RecordDataList>
+                <ParameterRecordDataItem Index="1" Length="4" TransferSequence="0">
+                  <Name TextId="TOK_DriveConfig"/>
+                  <Ref DataType="Unsigned32" ByteOffset="0" DefaultValue="0x00000000"
+                       TextId="TOK_MaxSpeed" AllowedValues="0x00000000..0x0001D4C0"
+                       Changeable="false" Visible="true"/>
+                </ParameterRecordDataItem>
+              </RecordDataList>
+
+            </VirtualSubmodule>
+          </VirtualSubmoduleList>
+        </Module>
+      </ModuleList>
+
+      <ExternalTextList>
+        <PrimaryLanguage Language="en">
+          <Text TextId="IDT_InfoText"           Value="VirtualDrive — software-simulated industrial drive controller"/>
+          <Text TextId="TOK_Name_DAP"           Value="VirtualDrive DAP"/>
+          <Text TextId="TOK_InfoText_DAP"       Value="Device Access Point for VirtualDrive"/>
+          <Text TextId="TOK_Sub_Interface"      Value="Interface"/>
+          <Text TextId="TOK_Sub_Port1"          Value="Port 1"/>
+          <Text TextId="TOK_Name_DriveModule"   Value="Drive Control Module"/>
+          <Text TextId="TOK_InfoText_DriveModule" Value="CiA 402 compatible drive control module"/>
+          <Text TextId="TOK_StatusWord"         Value="Status Word (CiA 402)"/>
+          <Text TextId="TOK_ActualSpeed"        Value="Actual Speed [RPM]"/>
+          <Text TextId="TOK_Position"           Value="Actual Position [counts]"/>
+          <Text TextId="TOK_ControlWord"        Value="Control Word (CiA 402)"/>
+          <Text TextId="TOK_TargetSpeed"        Value="Target Speed [RPM]"/>
+          <Text TextId="TOK_DriveConfig"        Value="Drive Configuration Record"/>
+          <Text TextId="TOK_MaxSpeed"           Value="Maximum Speed [RPM]"/>
+        </PrimaryLanguage>
+      </ExternalTextList>
+
+    </ApplicationProcess>
+  </ProfileBody>
+</ISO15745Profile>

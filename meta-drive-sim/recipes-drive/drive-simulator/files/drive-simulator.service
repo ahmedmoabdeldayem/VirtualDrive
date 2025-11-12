@@ -1,0 +1,33 @@
+[Unit]
+Description=VirtualDrive Industrial Protocol Simulator
+Documentation=https://github.com/VirtualDrive/docs
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/drive-simulator --protocol ethercat --interface eth0
+Restart=on-failure
+RestartSec=5s
+
+# Real-time scheduling: SCHED_FIFO priority 50 for the service process itself.
+# The cyclic RT thread inside the process will escalate to priority 80 via
+# pthread_setschedparam. This baseline ensures fast startup recovery.
+CPUSchedulingPolicy=fifo
+CPUSchedulingPriority=50
+
+# Memory locking: the cyclic thread calls mlockall() but the service also
+# needs the capability to do so
+LimitMEMLOCK=infinity
+
+# Raw socket access for EtherCAT (requires CAP_NET_RAW)
+AmbientCapabilities=CAP_NET_RAW CAP_SYS_NICE CAP_IPC_LOCK
+CapabilityBoundingSet=CAP_NET_RAW CAP_SYS_NICE CAP_IPC_LOCK
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=drive-simulator
+
+[Install]
+WantedBy=multi-user.target

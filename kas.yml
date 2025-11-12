@@ -1,0 +1,85 @@
+header:
+  version: 14
+
+# Top-level settings — KAS writes these directly into the generated local.conf
+machine: raspberrypi5-rt
+distro: virtualdrive
+target: virtualdrive-image
+
+repos:
+  # --- External layers (fetched by KAS into the build tree) ---
+
+  poky:
+    url: https://git.yoctoproject.org/poky
+    branch: scarthgap
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-raspberrypi:
+    url: https://github.com/agherzan/meta-raspberrypi
+    branch: scarthgap
+    layers:
+      .:
+
+  meta-openembedded:
+    url: https://github.com/openembedded/meta-openembedded
+    branch: scarthgap
+    layers:
+      meta-oe:
+      meta-networking:
+      meta-python:
+
+  # --- Local layers (already in this repo — no fetch needed) ---
+
+  meta-realtime:
+    path: meta-realtime
+    layers:
+      .:
+
+  meta-industrial-comm:
+    path: meta-industrial-comm
+    layers:
+      .:
+
+  meta-drive-sim:
+    path: meta-drive-sim
+    layers:
+      .:
+
+local_conf_header:
+  standard: |
+    # Auto-detect thread count from host VM CPUs
+    BB_NUMBER_THREADS ?= "${@oe.utils.cpu_count()}"
+    PARALLEL_MAKE ?= "-j${@oe.utils.cpu_count()}"
+
+    # Keep downloads and sstate on the VM's local disk for performance.
+    # With UTM VirtFS these would be very slow over the 9p/VirtFS bridge.
+    DL_DIR ?= "${TOPDIR}/../dl"
+    SSTATE_DIR ?= "${TOPDIR}/../sstate"
+
+    # Remove build artifacts after packaging to save ~40 GB of disk space
+    INHERIT += "rm_work"
+
+    # IPK packaging — faster than RPM for embedded targets
+    PACKAGE_CLASSES ?= "package_ipk"
+
+    # SSH access without password for development convenience
+    EXTRA_IMAGE_FEATURES ?= "debug-tweaks ssh-server-openssh"
+
+    # systemd as init manager (also set in distro conf but repeated here
+    # as belt-and-suspenders for the KAS-generated local.conf)
+    DISTRO_FEATURES:append = " systemd"
+    VIRTUAL-RUNTIME_init_manager = "systemd"
+    VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"
+
+    # Silence the disk-space monitor during UTM builds (limited VM disk)
+    BB_DISKMON_DIRS ??= "\
+        STOPTASKS,${TMPDIR},2G,100K \
+        STOPTASKS,${DL_DIR},1G,100K \
+        STOPTASKS,${SSTATE_DIR},1G,100K \
+        ABORT,${TMPDIR},500M,1K \
+    "
+
+    CONF_VERSION = "2"
