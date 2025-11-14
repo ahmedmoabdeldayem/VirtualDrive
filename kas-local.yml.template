@@ -1,0 +1,35 @@
+header:
+  version: 14
+
+# Machine-specific overlay — tells KAS to use already-cloned local layer
+# directories instead of fetching them from the internet.
+#
+# HOW TO USE:
+#   1. Copy this file to kas-local.yml (it's gitignored — stays local to this machine)
+#   2. Fill in the paths below to point at your existing clones
+#   3. Build with: kas build kas.yml:kas-local.yml
+#
+# GENERATED AUTOMATICALLY by: bash scripts/use-local-layers.sh /path/to/layers
+#
+# With path: KAS does NOT checkout or modify the repos — it uses whatever
+# branch is currently checked out.  Safe to share layers between projects.
+
+repos:
+  poky:
+    path: /CHANGE/ME/poky         # must contain meta/ meta-poky/ meta-yocto-bsp/
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-raspberrypi:
+    path: /CHANGE/ME/meta-raspberrypi
+    layers:
+      .:
+
+  meta-openembedded:
+    path: /CHANGE/ME/meta-openembedded
+    layers:
+      meta-oe:
+      meta-networking:
+      meta-python:
