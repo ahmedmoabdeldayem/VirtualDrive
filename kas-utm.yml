@@ -1,0 +1,25 @@
+header:
+  version: 14
+
+# UTM VM overlay — reuses existing layer clones from SecureEmbeddedLinux project.
+# Usage: kas build kas.yml:kas-utm.yml
+
+repos:
+  poky:
+    path: /home/borham/SecureEmbeddedLinux/yocto/poky
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-raspberrypi:
+    path: /home/borham/SecureEmbeddedLinux/yocto/layers/meta-raspberrypi
+    layers:
+      .:
+
+  meta-openembedded:
+    path: /home/borham/SecureEmbeddedLinux/yocto/layers/meta-openembedded
+    layers:
+      meta-oe:
+      meta-networking:
+      meta-python:
