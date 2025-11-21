@@ -82,4 +82,9 @@ local_conf_header:
         ABORT,${TMPDIR},500M,1K \
     "
 
+    # Accept restricted firmware licenses required by Raspberry Pi 5
+    # linux-firmware-rpidistro carries 'synaptics-killswitch' for the
+    # touchpad firmware blob — must be explicitly accepted to build.
+    LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch"
+
     CONF_VERSION = "2"
