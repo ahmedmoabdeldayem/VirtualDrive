@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Compile flags
 add_compile_options(-Wall -Wextra -Werror -O2)
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_compile_options(-fsanitize=address -fno-omit-frame-pointer -O1)
@@ -14,25 +13,33 @@ endif()
 
 find_package(Threads REQUIRED)
 
-# --- soes ---
-find_library(SOES_LIB NAMES soes PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib
-             NO_DEFAULT_PATH REQUIRED)
-find_library(OSAL_LIB NAMES osal PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib
-             NO_DEFAULT_PATH QUIET)
-find_path(SOES_INCLUDE_DIR NAMES soes/esc.h
-          PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include NO_DEFAULT_PATH REQUIRED)
+# ---------------------------------------------------------------------------
+# Protocol libraries — all OPTIONAL.
+# The adapters compile to stubs when the library is absent so the binary
+# always builds. Full integration is enabled when the library is found.
+# ---------------------------------------------------------------------------
 
-# --- p-net ---
-find_library(PNET_LIB NAMES pnet PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib
-             NO_DEFAULT_PATH REQUIRED)
-find_path(PNET_INCLUDE_DIR NAMES pnet_api.h
-          PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include NO_DEFAULT_PATH REQUIRED)
+find_library(SOES_LIB  NAMES soes  PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH QUIET)
+find_library(OSAL_LIB  NAMES osal  PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH QUIET)
+find_path(SOES_INC     NAMES soes/esc.h esc.h
+          PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include
+                ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include/soes
+          NO_DEFAULT_PATH QUIET)
 
-# --- OpENer ---
+find_library(PNET_LIB  NAMES pnet  PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH QUIET)
+find_path(PNET_INC     NAMES pnet_api.h
+          PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include NO_DEFAULT_PATH QUIET)
+
 find_library(OPENER_LIB NAMES EIPStack opener
-             PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH REQUIRED)
-find_path(OPENER_INCLUDE_DIR NAMES opener_api.h
-          PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include/opener NO_DEFAULT_PATH REQUIRED)
+             PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH QUIET)
+find_path(OPENER_INC   NAMES opener_api.h
+          PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include/opener
+                ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include
+          NO_DEFAULT_PATH QUIET)
+
+message(STATUS "SOES   : ${SOES_LIB}  headers: ${SOES_INC}")
+message(STATUS "p-net  : ${PNET_LIB}  headers: ${PNET_INC}")
+message(STATUS "OpENer : ${OPENER_LIB} headers: ${OPENER_INC}")
 
 set(SOURCES
     src/main.cpp
@@ -51,25 +58,43 @@ add_executable(drive-simulator ${SOURCES})
 
 target_include_directories(drive-simulator PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-    ${SOES_INCLUDE_DIR}
-    ${PNET_INCLUDE_DIR}
-    ${OPENER_INCLUDE_DIR}
 )
 
-set(PROTOCOL_LIBS ${SOES_LIB} ${PNET_LIB} ${OPENER_LIB})
-if(OSAL_LIB)
-    list(APPEND PROTOCOL_LIBS ${OSAL_LIB})
+# Conditionally add library includes and link flags
+if(SOES_LIB AND SOES_INC)
+    target_compile_definitions(drive-simulator PRIVATE HAVE_SOES=1)
+    target_include_directories(drive-simulator PRIVATE ${SOES_INC})
+    target_link_libraries(drive-simulator PRIVATE ${SOES_LIB})
+    if(OSAL_LIB)
+        target_link_libraries(drive-simulator PRIVATE ${OSAL_LIB})
+    endif()
+    message(STATUS "EtherCAT : full SOES integration")
+else()
+    message(STATUS "EtherCAT : stub mode (SOES not found)")
 endif()
 
-target_link_libraries(drive-simulator PRIVATE
-    Threads::Threads
-    rt
-    ${PROTOCOL_LIBS}
-)
+if(PNET_LIB AND PNET_INC)
+    target_compile_definitions(drive-simulator PRIVATE HAVE_PNET=1)
+    target_include_directories(drive-simulator PRIVATE ${PNET_INC})
+    target_link_libraries(drive-simulator PRIVATE ${PNET_LIB})
+    message(STATUS "PROFINET : full p-net integration")
+else()
+    message(STATUS "PROFINET : stub mode (p-net not found)")
+endif()
+
+if(OPENER_LIB AND OPENER_INC)
+    target_compile_definitions(drive-simulator PRIVATE HAVE_OPENER=1)
+    target_include_directories(drive-simulator PRIVATE ${OPENER_INC})
+    target_link_libraries(drive-simulator PRIVATE ${OPENER_LIB})
+    message(STATUS "EtherNet/IP : full OpENer integration")
+else()
+    message(STATUS "EtherNet/IP : stub mode (OpENer not found)")
+endif()
+
+target_link_libraries(drive-simulator PRIVATE Threads::Threads rt)
 
 install(TARGETS drive-simulator RUNTIME DESTINATION bin)
 
-# Unit tests — excluded from Yocto build (BUILD_TESTING=OFF in recipe)
 include(CTest)
 if(BUILD_TESTING)
     add_subdirectory(test)

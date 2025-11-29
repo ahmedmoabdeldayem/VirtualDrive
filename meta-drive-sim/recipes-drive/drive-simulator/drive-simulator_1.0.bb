@@ -3,6 +3,8 @@ DESCRIPTION = "Software-simulated EtherCAT/PROFINET/EtherNet/IP drive with CiA 4
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c106ee394d8256068e0ea44d87c3291c"
 
+# Protocol libraries are optional — the binary builds with stubs when absent.
+# List them as DEPENDS so Yocto builds them first if they exist.
 DEPENDS = "soes p-net opener"
 
 inherit cmake systemd
