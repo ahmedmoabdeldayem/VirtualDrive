@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/rtlabs-com/p-net"
 LICENSE = "BSD-3-Clause & GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=e7e5ceeb003c5e39e4bf8ceda8a4e5fc"
 
-SRC_URI = "git://github.com/rtlabs-com/p-net.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/rtlabs-com/p-net.git;protocol=https;nobranch=1"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 
