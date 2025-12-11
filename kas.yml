@@ -68,9 +68,9 @@ local_conf_header:
     # SSH access without password for development convenience
     EXTRA_IMAGE_FEATURES ?= "debug-tweaks ssh-server-openssh"
 
-    # systemd as init manager (also set in distro conf but repeated here
-    # as belt-and-suspenders for the KAS-generated local.conf)
-    DISTRO_FEATURES:append = " systemd"
+    # systemd as init manager — Scarthgap (Yocto 5.0) requires usrmerge
+    # whenever systemd is in DISTRO_FEATURES
+    DISTRO_FEATURES:append = " systemd usrmerge"
     VIRTUAL-RUNTIME_init_manager = "systemd"
     VIRTUAL-RUNTIME_initscripts = "systemd-compat-units"
 
