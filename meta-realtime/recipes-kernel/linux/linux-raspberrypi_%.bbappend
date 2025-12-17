@@ -1,5 +1,10 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
+# Reuse the upstream raspberrypi5 BSP definition for our derived machine.
+# Without this the kernel-yocto class aborts with "Could not locate BSP
+# definition for raspberrypi5-rt/standard".
+KMACHINE:raspberrypi5-rt = "raspberrypi5"
+
 SRC_URI:append = " \
     file://preempt-rt.cfg \
     file://realtime.cfg \
