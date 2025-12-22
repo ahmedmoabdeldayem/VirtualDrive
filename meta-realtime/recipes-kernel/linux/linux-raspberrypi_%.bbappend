@@ -1,9 +1,12 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 # Reuse the upstream raspberrypi5 BSP definition for our derived machine.
-# Without this the kernel-yocto class aborts with "Could not locate BSP
-# definition for raspberrypi5-rt/standard".
 KMACHINE:raspberrypi5-rt = "raspberrypi5"
+
+# meta-raspberrypi sets KBUILD_DEFCONFIG only for MACHINE=raspberrypi5.
+# Since our MACHINE=raspberrypi5-rt that override is never applied, so
+# kernel-yocto reports "no defconfig was provided".  Mirror it here.
+KBUILD_DEFCONFIG:raspberrypi5-rt = "bcm2712_defconfig"
 
 SRC_URI:append = " \
     file://preempt-rt.cfg \
