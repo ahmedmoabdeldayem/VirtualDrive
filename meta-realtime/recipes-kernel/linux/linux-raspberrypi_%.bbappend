@@ -13,6 +13,13 @@ SRC_URI:append = " \
     file://realtime.cfg \
 "
 
+# The kernel-meta RT patch set does not apply cleanly to RPi5 6.6.x.
+# Remove it so do_patch does not fail. RT-adjacent options (HIGH_RES_TIMERS,
+# NO_HZ_FULL, HZ_1000) are mainline and still applied via the cfg fragments.
+# CONFIG_PREEMPT_RT requires the patchset and will be silently ignored.
+KERNEL_FEATURES:remove = "features/rt/rt.scc"
+KERNEL_FEATURES:remove = "features/rt/preempt-rt.scc"
+
 # --- OPTIONAL: Full PREEMPT_RT patchset ---
 # CONFIG_PREEMPT_RT=y in the config fragment requires the RT patchset.
 # Without the patch, that option is silently ignored by kconfig (build still
