@@ -23,13 +23,20 @@ void DriveSimulator::stop() {
 }
 
 void DriveSimulator::cyclicCallback() {
-    const uint16_t cw = protocol_.getControlWord();
+    uint16_t cw = protocol_.getControlWord();
+    // HTTP /control?cw=N overrides the protocol adapter — used when no
+    // fieldbus master is connected (all three adapters return 0 in stub mode).
+    if (monitor_.hasHttpCommand()) {
+        cw = monitor_.popHttpControlWord();
+    }
     stateMachine_.processControlWord(cw);
 
     const DriveState state = stateMachine_.getState();
 
     if (state == DriveState::OPERATION_ENABLED) {
-        motor_.setTargetSpeed(protocol_.getTargetSpeed());
+        float speed = protocol_.getTargetSpeed();
+        if (speed == 0.0f) speed = monitor_.getHttpTargetSpeed();
+        motor_.setTargetSpeed(speed);
     } else {
         motor_.setTargetSpeed(0.0f);
     }

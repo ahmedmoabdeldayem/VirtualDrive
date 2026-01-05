@@ -2,6 +2,7 @@
 
 #include <arpa/inet.h>
 #include <cerrno>
+#include <cstdlib>
 #include <cstring>
 #include <iostream>
 #include <netinet/in.h>
@@ -146,6 +147,21 @@ void DriveMonitor::handleClient(int client_fd) {
         }
         contentType = "text/plain";
 
+    } else if (std::strncmp(req, "GET /control", 12) == 0) {
+        const char* cwParam = std::strstr(req, "cw=");
+        if (cwParam) {
+            uint16_t cw = static_cast<uint16_t>(std::strtol(cwParam + 3, nullptr, 10));
+            httpCw_.store(cw, std::memory_order_release);
+            httpCwPending_.store(true, std::memory_order_release);
+        }
+        const char* spParam = std::strstr(req, "speed=");
+        if (spParam) {
+            float sp = std::strtof(spParam + 6, nullptr);
+            httpSpeedX10_.store(static_cast<uint32_t>(sp * 10.0f), std::memory_order_release);
+        }
+        body        = "{\"ok\":true}\n";
+        contentType = "application/json";
+
     } else {
         body        = "404 Not Found\n";
         contentType = "text/plain";
@@ -163,4 +179,17 @@ void DriveMonitor::handleClient(int client_fd) {
 
     std::string respStr = resp.str();
     send(client_fd, respStr.c_str(), respStr.size(), MSG_NOSIGNAL);
+}
+
+bool DriveMonitor::hasHttpCommand() const {
+    return httpCwPending_.load(std::memory_order_acquire);
+}
+
+uint16_t DriveMonitor::popHttpControlWord() {
+    httpCwPending_.store(false, std::memory_order_release);
+    return httpCw_.load(std::memory_order_acquire);
+}
+
+float DriveMonitor::getHttpTargetSpeed() const {
+    return static_cast<float>(httpSpeedX10_.load(std::memory_order_acquire)) / 10.0f;
 }

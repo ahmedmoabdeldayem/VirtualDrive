@@ -1,16 +1,43 @@
-SUMMARY = "p-net PROFINET IO-Device stack (stub — library not auto-fetched)"
-DESCRIPTION = "Stub recipe. drive-simulator compiles with built-in PROFINET stubs \
-when p-net is absent. To enable full p-net integration, replace this recipe \
-with one that fetches https://github.com/rtlabs-com/p-net and \
-installs libpnet.a + headers into sysroot."
-LICENSE = "CLOSED"
+SUMMARY = "p-net — PROFINET IO-Device stack"
+DESCRIPTION = "rt-labs p-net PROFINET IO-Device library. Implements a full PROFINET \
+IO-Device with cyclic I/O, alarms, and parameter access. Used by drive-simulator \
+for the PROFINET protocol adapter."
+LICENSE = "BSD-3-Clause & GPL-3.0-only"
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=18ec3e32f47f5e0cabd3f643e6c08e1e"
 
-do_fetch[noexec]     = "1"
-do_unpack[noexec]    = "1"
-do_patch[noexec]     = "1"
-do_configure[noexec] = "1"
-do_compile[noexec]   = "1"
-do_install[noexec]   = "1"
+SRC_URI = "git://github.com/rtlabs-com/p-net.git;protocol=https;branch=main"
+SRCREV = "${AUTOREV}"
+PV = "1.0+git${SRCPV}"
 
-FILES:${PN} = ""
+S = "${WORKDIR}/git"
+
+inherit cmake
+
+EXTRA_OECMAKE = " \
+    -DCMAKE_BUILD_TYPE=Release \
+    -DBUILD_SHARED_LIBS=OFF \
+    -DBUILD_TESTING=OFF \
+    -DBUILD_SAMPLES=OFF \
+    -DUSE_SCHED_FIFO=ON \
+"
+
+do_install() {
+    install -d ${D}${libdir}
+    find ${B} -name "libpnet.a"  -exec install -m 0644 {} ${D}${libdir}/ \;
+    # p-net may also produce a platform abstraction library
+    find ${B} -name "libpnal.a"  -exec install -m 0644 {} ${D}${libdir}/ \;
+    find ${B} -name "libosal.a"  -exec install -m 0644 {} ${D}${libdir}/ \;
+
+    install -d ${D}${includedir}
+    install -m 0644 ${S}/include/pnet_api.h ${D}${includedir}/ || true
+    find ${S}/include -maxdepth 1 -name "*.h" \
+        -exec install -m 0644 {} ${D}${includedir}/ \;
+    # Platform headers (osal.h lives here in some versions)
+    find ${S}/src/ports/linux -maxdepth 1 -name "*.h" \
+        -exec install -m 0644 {} ${D}${includedir}/ \; 2>/dev/null || true
+}
+
 ALLOW_EMPTY:${PN} = "1"
+FILES:${PN}-staticdev = "${libdir}/*.a"
+FILES:${PN}-dev = "${includedir}"
+RDEPENDS:${PN} = ""
