@@ -5,7 +5,7 @@ LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
 SRC_URI = "git://github.com/OpenEtherCATsociety/SOES.git;protocol=https;branch=master"
-SRCREV = "${AUTOREV}"
+SRCREV = "6ef7b9415e936c061ad30626ca00004bdde2ac62"
 PV = "1.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"

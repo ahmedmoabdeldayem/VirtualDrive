@@ -6,7 +6,7 @@ LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1dece7821bf3fd70fe1309eaa37d52a2"
 
 SRC_URI = "git://github.com/EIPStackGroup/OpENer.git;protocol=https;branch=master"
-SRCREV = "${AUTOREV}"
+SRCREV = "d8820ef41ce30dda06d213438ba81c81de33ffe2"
 PV = "2.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
