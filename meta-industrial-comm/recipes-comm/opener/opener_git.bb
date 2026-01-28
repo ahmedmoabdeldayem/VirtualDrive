@@ -11,6 +11,9 @@ PV = "2.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
+# CMakeLists.txt lives in source/, not the repo root
+OECMAKE_SOURCEPATH = "${S}/source"
+
 inherit cmake
 
 # POSIX port provides the Linux-specific network handler and socket layer.
