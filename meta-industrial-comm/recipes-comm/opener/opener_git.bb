@@ -11,17 +11,15 @@ PV = "2.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-# CMakeLists.txt lives in source/, not the repo root
-OECMAKE_SOURCEPATH = "${S}/source"
+# The POSIX platform entry point is bin/posix/ — source/CMakeLists.txt is a
+# library sub-CMake not meant to be invoked directly.
+OECMAKE_SOURCEPATH = "${S}/bin/posix"
 
 inherit cmake
 
-# POSIX port provides the Linux-specific network handler and socket layer.
 EXTRA_OECMAKE = " \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
-    -DOPENER_PLATFORM=POSIX \
-    -DOpENer_BUILDSUPPORT_DIR=${S}/source/buildsupport \
     -DCMAKE_INSTALL_PREFIX=${prefix} \
 "
 
