@@ -50,11 +50,18 @@ set(PNET_MAX_FILENAME_SIZE                  48)
 set(PNET_MAX_PORT_DESCRIPTION_SIZE          64)
 
 # ── Logging (OFF = disabled at compile time) ───────────────────────────────
-set(LOG_LEVEL    "WARNING")
-set(PF_ETH_LOG   "OFF") set(PF_LLDP_LOG  "OFF") set(PF_SNMP_LOG  "OFF")
-set(PF_CPM_LOG   "OFF") set(PF_PPM_LOG   "OFF") set(PF_DCP_LOG   "OFF")
-set(PF_RPC_LOG   "OFF") set(PF_ALARM_LOG "OFF") set(PF_AL_BUF_LOG "OFF")
-set(PF_PNAL_LOG  "OFF") set(PNET_LOG     "OFF")
+set(LOG_LEVEL     "WARNING")
+set(PF_ETH_LOG    "OFF")
+set(PF_LLDP_LOG   "OFF")
+set(PF_SNMP_LOG   "OFF")
+set(PF_CPM_LOG    "OFF")
+set(PF_PPM_LOG    "OFF")
+set(PF_DCP_LOG    "OFF")
+set(PF_RPC_LOG    "OFF")
+set(PF_ALARM_LOG  "OFF")
+set(PF_AL_BUF_LOG "OFF")
+set(PF_PNAL_LOG   "OFF")
+set(PNET_LOG      "OFF")
 
 # ── Generated headers ──────────────────────────────────────────────────────
 configure_file(pnet_options.h.in ${CMAKE_CURRENT_BINARY_DIR}/pnet_options.h)
