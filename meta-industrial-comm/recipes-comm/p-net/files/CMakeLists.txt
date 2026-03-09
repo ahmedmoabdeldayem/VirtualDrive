@@ -5,7 +5,6 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_EXTENSIONS ON)
 
 include(GNUInstallDirs)
-include(GenerateExportHeader)
 find_package(Threads REQUIRED)
 
 # ── Version ────────────────────────────────────────────────────────────────
@@ -78,11 +77,6 @@ add_library(pnet STATIC
     ${PNET_DEVICE}
     osal_linux.c
     pnal_linux.c
-)
-
-generate_export_header(pnet
-    BASE_NAME pnet
-    EXPORT_FILE_NAME ${CMAKE_CURRENT_BINARY_DIR}/pnet_export.h
 )
 
 target_include_directories(pnet
