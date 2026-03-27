@@ -16,12 +16,7 @@ typedef struct pnal_buf
    uint16_t          tot_len;
 } pnal_buf_t;
 
-/* PNAL configuration passed to pnal_eth_init / pnal_snmp_init.
- * Linux port needs no extra config beyond the interface name. */
-typedef struct pnal_cfg
-{
-   int dummy;
-} pnal_cfg_t;
+/* pnal_cfg_t is defined in pnal_config.h (included earlier via pnet_api.h) */
 
 /* Forward-declared in pnal.h — completed here */
 struct pnal_eth_handle
