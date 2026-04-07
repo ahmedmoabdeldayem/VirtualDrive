@@ -70,6 +70,8 @@ configure_file(pnet_version.h.in ${CMAKE_CURRENT_BINARY_DIR}/pnet_version.h)
 # ── Source files ───────────────────────────────────────────────────────────
 file(GLOB PNET_COMMON  src/common/*.c)
 file(GLOB PNET_DEVICE  src/device/*.c)
+# Exclude files for disabled options so they don't access absent struct fields
+list(REMOVE_ITEM PNET_COMMON ${CMAKE_CURRENT_SOURCE_DIR}/src/common/pf_snmp.c)
 # src/drivers/ contains hardware-specific LAN9662 code — excluded
 
 add_library(pnet STATIC
