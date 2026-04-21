@@ -4,7 +4,10 @@ data exchange. Provides ecat_slv_init/ecat_slv_poll API used by drive-simulator.
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=d86f4cd7b881c753fe81c48d2fb8baf4"
 
-SRC_URI = "git://github.com/OpenEtherCATsociety/SOES.git;protocol=https;branch=master"
+SRC_URI = " \
+    git://github.com/OpenEtherCATsociety/SOES.git;protocol=https;branch=master \
+    file://cc.h \
+"
 SRCREV = "6ef7b9415e936c061ad30626ca00004bdde2ac62"
 PV = "1.0+git${SRCPV}"
 
@@ -24,6 +27,9 @@ do_install() {
     install -d ${D}${libdir}
     find ${B} -name "libsoes.a"  -exec install -m 0644 {} ${D}${libdir}/ \;
     find ${B} -name "libosal.a"  -exec install -m 0644 {} ${D}${libdir}/ \;
+
+    # cc.h is included with angle brackets by soes/esc.h — must be in system include path
+    install -m 0644 ${WORKDIR}/cc.h ${D}${includedir}/
 
     install -d ${D}${includedir}/soes
     install -m 0644 ${S}/soes/esc.h       ${D}${includedir}/soes/ || true
