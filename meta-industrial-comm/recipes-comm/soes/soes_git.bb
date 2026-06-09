@@ -32,14 +32,13 @@ do_install() {
     install -d ${D}${includedir}
     install -m 0644 ${WORKDIR}/cc.h ${D}${includedir}/cc.h
 
+    # Install headers in both soes/ (for #include "soes/esc.h" callers) and
+    # directly in includedir (for <esc_coe.h> angle-bracket includes within esc.h)
     install -d ${D}${includedir}/soes
-    install -m 0644 ${S}/soes/esc.h       ${D}${includedir}/soes/ || true
-    install -m 0644 ${S}/soes/esc_coe.h   ${D}${includedir}/soes/ || true
-    install -m 0644 ${S}/soes/ecat_slv.h  ${D}${includedir}/soes/ || true
-    install -m 0644 ${S}/soes/esc_cfg.h   ${D}${includedir}/soes/ || true
-    # Copy any remaining public headers
     find ${S}/soes -maxdepth 1 -name "*.h" \
         -exec install -m 0644 {} ${D}${includedir}/soes/ \;
+    find ${S}/soes -maxdepth 1 -name "*.h" \
+        -exec install -m 0644 {} ${D}${includedir}/ \;
 }
 
 ALLOW_EMPTY:${PN} = "1"
