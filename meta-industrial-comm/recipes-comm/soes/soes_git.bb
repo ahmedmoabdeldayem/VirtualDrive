@@ -7,6 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=d86f4cd7b881c753fe81c48d2fb8baf4"
 SRC_URI = " \
     git://github.com/OpenEtherCATsociety/SOES.git;protocol=https;branch=master \
     file://cc.h \
+    file://ecat_options.h \
 "
 SRCREV = "6ef7b9415e936c061ad30626ca00004bdde2ac62"
 PV = "1.0+git${SRCPV}"
@@ -39,6 +40,9 @@ do_install() {
         -exec install -m 0644 {} ${D}${includedir}/soes/ \;
     find ${S}/soes -maxdepth 1 -name "*.h" \
         -exec install -m 0644 {} ${D}${includedir}/ \;
+    # ecat_options.h is a user config included by options.h with quotes
+    install -m 0644 ${WORKDIR}/ecat_options.h ${D}${includedir}/soes/ecat_options.h
+    install -m 0644 ${WORKDIR}/ecat_options.h ${D}${includedir}/ecat_options.h
 }
 
 ALLOW_EMPTY:${PN} = "1"
