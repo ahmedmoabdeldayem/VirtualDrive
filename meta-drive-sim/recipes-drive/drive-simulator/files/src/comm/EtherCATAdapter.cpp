@@ -16,6 +16,7 @@ EtherCATAdapter* EtherCATAdapter::instance() { return instance_; }
 extern "C" {
 #include "soes/esc.h"
 #include "soes/esc_coe.h"
+#include "soes/ecat_slv.h"
 }
 
 #pragma pack(push, 1)
