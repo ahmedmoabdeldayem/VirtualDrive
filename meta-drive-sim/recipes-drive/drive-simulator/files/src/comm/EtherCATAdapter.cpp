@@ -57,7 +57,7 @@ void EtherCATAdapter::runStack() {
     cfg.txpdo_override = cb_get_inputs;
     ecat_slv_init(&cfg);
     while (running_.load(std::memory_order_acquire))
-        ecat_slv_poll(&cfg);
+        ecat_slv_poll();
 }
 
 void EtherCATAdapter::onSetOutputs() {
