@@ -128,7 +128,7 @@ void PROFINETAdapter::checkTemperatureAlarm() {
     if (t > 80.0f && !alarmPending_ && arep_ != 0xFFFFFFFFU) {
         alarmPending_ = true;
         pnet_alarm_send_process_alarm(static_cast<pnet_t*>(pnet_),
-                                      arep_, 0, 1, 1, 0x0001, 0, 0, nullptr);
+                                      arep_, 0, 1, 1, 0x0001, 0, nullptr);
         std::cout << "[PROFINET] Temp alarm " << t << "°C\n";
     }
     if (t <= 75.0f) alarmPending_ = false;
@@ -191,7 +191,7 @@ void PROFINETAdapter::stop() {
     running_.store(false, std::memory_order_release);
     if (stackThread_) { pthread_join(stackThread_, nullptr); stackThread_ = 0; }
 #ifdef HAVE_PNET
-    if (pnet_) { pnet_exit(static_cast<pnet_t*>(pnet_)); pnet_ = nullptr; }
+    pnet_ = nullptr; /* pnet_exit() removed in p-net v1.0 — stack cleans up internally */
 #endif
 }
 
