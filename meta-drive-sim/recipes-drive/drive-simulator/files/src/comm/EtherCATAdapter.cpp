@@ -17,6 +17,12 @@ extern "C" {
 #include "soes/esc.h"
 #include "soes/esc_coe.h"
 #include "soes/ecat_slv.h"
+
+/* Minimal EtherCAT object dictionary — SOES requires this symbol to be
+ * defined by the application. An empty list is sufficient for simulation. */
+const _objectlist SDOobjects[] = {
+    {0xFFFF, 0, 0, 0, NULL, NULL}
+};
 }
 
 #pragma pack(push, 1)

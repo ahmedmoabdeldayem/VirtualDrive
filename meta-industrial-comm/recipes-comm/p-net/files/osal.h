@@ -21,6 +21,16 @@ extern "C" {
 #define CC_ASSERT(e)          do { if (!(e)) { __builtin_trap(); } } while (0)
 #define CC_ALIGNED(n)         __attribute__((aligned(n)))
 
+/* Byte-order conversion macros (little-endian Linux) */
+#define CC_TO_BE16(x)         __builtin_bswap16((uint16_t)(x))
+#define CC_TO_BE32(x)         __builtin_bswap32((uint32_t)(x))
+#define CC_TO_LE16(x)         ((uint16_t)(x))
+#define CC_TO_LE32(x)         ((uint32_t)(x))
+#define CC_FROM_BE16(x)       __builtin_bswap16((uint16_t)(x))
+#define CC_FROM_BE32(x)       __builtin_bswap32((uint32_t)(x))
+#define CC_FROM_LE16(x)       ((uint16_t)(x))
+#define CC_FROM_LE32(x)       ((uint32_t)(x))
+
 /* Utility macros */
 #define BIT(n)                (1U << (n))
 #define NELEMENTS(a)          (sizeof(a) / sizeof((a)[0]))
