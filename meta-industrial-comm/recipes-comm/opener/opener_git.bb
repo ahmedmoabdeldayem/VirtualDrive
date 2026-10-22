@@ -40,7 +40,13 @@ do_install() {
     find ${B} -name "*.a" -exec install -m 0644 {} ${D}${libdir}/ \;
 
     install -d ${D}${includedir}/opener
-    for dir in ${S}/source/src/cip ${S}/source/src ${S}/source/src/ports/POSIX; do
+    for dir in \
+        ${S}/source/src/cip \
+        ${S}/source/src \
+        ${S}/source/src/ports \
+        ${S}/source/src/ports/POSIX \
+        ${S}/source/src/utils \
+        ${S}/source/src/enet_encap; do
         find $dir -maxdepth 1 -name "*.h" \
             -exec install -m 0644 {} ${D}${includedir}/opener/ \; 2>/dev/null || true
     done
