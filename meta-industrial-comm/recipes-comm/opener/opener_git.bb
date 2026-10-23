@@ -45,6 +45,7 @@ do_install() {
         ${S}/source/src \
         ${S}/source/src/ports \
         ${S}/source/src/ports/POSIX \
+        ${S}/source/src/ports/POSIX/sample_application \
         ${S}/source/src/utils \
         ${S}/source/src/enet_encap; do
         find $dir -maxdepth 1 -name "*.h" \
