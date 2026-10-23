@@ -87,4 +87,7 @@ local_conf_header:
     # touchpad firmware blob — must be explicitly accepted to build.
     LICENSE_FLAGS_ACCEPTED = "synaptics-killswitch"
 
+    # Allow AUTOREV recipes to always fetch latest (needed for soes/p-net/opener)
+    BB_SRCREV_POLICY = "cache"
+
     CONF_VERSION = "2"
