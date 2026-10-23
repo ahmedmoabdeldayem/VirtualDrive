@@ -3,7 +3,7 @@ HOMEPAGE = "https://github.com/OpenEtherCATsociety/SOES"
 LICENSE = "GPL-2.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
 
-SRC_URI = "git://github.com/OpenEtherCATsociety/SOES.git;protocol=https;branch=master"
+SRC_URI = "git://github.com/OpenEtherCATsociety/SOES.git;protocol=https;nobranch=1"
 SRCREV = "${AUTOREV}"
 PV = "1.0+git${SRCPV}"
 
