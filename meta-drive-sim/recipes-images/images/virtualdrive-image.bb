@@ -35,7 +35,6 @@ IMAGE_INSTALL:append = " \
     e2fsprogs-e2fsck \
     \
     kernel-modules \
-    linux-firmware-rpidistro \
 "
 
 # Image size — RT filesystem doesn't need much space
