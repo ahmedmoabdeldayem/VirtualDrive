@@ -1,0 +1,19 @@
+header:
+  version: 14
+
+# Overlay: add to the base kas.yml build to also produce the cross-compilation SDK.
+# Usage: kas build kas.yml:kas-sdk.yml
+#
+# The SDK installs to ~/virtualdrive-sdk on the host and provides:
+#   - aarch64-poky-linux-g++ cross-compiler
+#   - All sysroot libraries (soes, p-net, opener, pthreads, rt)
+# This lets you rebuild the C++ application on your Mac (via UTM) without a
+# full Yocto build each time.
+
+target: virtualdrive-image:do_populate_sdk
+
+local_conf_header:
+  sdk: |
+    SDKMACHINE = "aarch64"
+    TOOLCHAIN_TARGET_TASK:append = " soes-dev p-net-dev opener-dev"
+    SDK_TITLE = "VirtualDrive SDK"
