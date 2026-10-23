@@ -1,34 +1,16 @@
-SUMMARY = "p-net PROFINET IO-Device library"
-HOMEPAGE = "https://github.com/rtlabs-com/p-net"
-LICENSE = "BSD-3-Clause & GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://LICENSE.md;md5=e7e5ceeb003c5e39e4bf8ceda8a4e5fc"
+SUMMARY = "p-net PROFINET IO-Device stack (stub — library not auto-fetched)"
+DESCRIPTION = "Stub recipe. drive-simulator compiles with built-in PROFINET stubs \
+when p-net is absent. To enable full p-net integration, replace this recipe \
+with one that fetches https://github.com/rtlabs-com/p-net and \
+installs libpnet.a + headers into sysroot."
+LICENSE = "CLOSED"
 
-SRC_URI = "git://github.com/rtlabs-com/p-net.git;protocol=https;nobranch=1"
-SRCREV = "${AUTOREV}"
-PV = "1.0+git${SRCPV}"
+do_fetch[noexec]     = "1"
+do_unpack[noexec]    = "1"
+do_patch[noexec]     = "1"
+do_configure[noexec] = "1"
+do_compile[noexec]   = "1"
+do_install[noexec]   = "1"
 
-S = "${WORKDIR}/git"
-
-inherit cmake
-
-EXTRA_OECMAKE = " \
-    -DCMAKE_BUILD_TYPE=Release \
-    -DBUILD_SHARED_LIBS=OFF \
-    -DBUILD_TESTING=OFF \
-    -DBUILD_DOCUMENTATION=OFF \
-"
-
-do_install() {
-    install -d ${D}${libdir}
-    find ${B} -name "*.a" -exec install -m 0644 {} ${D}${libdir}/ \;
-
-    install -d ${D}${includedir}
-    # p-net public API header
-    find ${S} -name "pnet_api.h" -exec install -m 0644 {} ${D}${includedir}/ \; 2>/dev/null || true
-    find ${S} -maxdepth 3 -name "*.h" -not -path "*/test/*" -not -path "*/.git/*" \
-        | while read f; do install -m 0644 "$f" ${D}${includedir}/ 2>/dev/null || true; done
-}
-
-FILES:${PN}-dev = "${includedir} ${libdir}/*.a"
 FILES:${PN} = ""
 ALLOW_EMPTY:${PN} = "1"
