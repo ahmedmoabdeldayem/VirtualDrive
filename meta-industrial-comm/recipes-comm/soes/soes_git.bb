@@ -29,7 +29,8 @@ do_install() {
     find ${B} -name "libosal.a"  -exec install -m 0644 {} ${D}${libdir}/ \;
 
     # cc.h is included with angle brackets by soes/esc.h — must be in system include path
-    install -m 0644 ${WORKDIR}/cc.h ${D}${includedir}/
+    install -d ${D}${includedir}
+    install -m 0644 ${WORKDIR}/cc.h ${D}${includedir}/cc.h
 
     install -d ${D}${includedir}/soes
     install -m 0644 ${S}/soes/esc.h       ${D}${includedir}/soes/ || true
