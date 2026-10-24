@@ -14,6 +14,7 @@ SRC_URI = " \
     file://pnal_linux.c \
     file://pnal_sys.h \
     file://pnet_export.h \
+    file://pnal_config.h \
 "
 SRCREV = "ca4f37c5d66b5378a8cf9349b9084df0612043da"
 PV = "1.0+git${SRCPV}"
@@ -34,6 +35,7 @@ do_configure:prepend() {
     cp ${WORKDIR}/pnal_linux.c    ${S}/pnal_linux.c
     cp ${WORKDIR}/pnal_sys.h      ${S}/pnal_sys.h
     cp ${WORKDIR}/pnet_export.h   ${S}/include/pnet_export.h
+    cp ${WORKDIR}/pnal_config.h   ${S}/include/pnal_config.h
 }
 
 do_install() {
