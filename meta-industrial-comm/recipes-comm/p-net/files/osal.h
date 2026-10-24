@@ -11,6 +11,14 @@
 extern "C" {
 #endif
 
+/* Compiler compatibility macros used by pf_types.h packed structs */
+#define CC_PACKED             __attribute__((packed))
+#define CC_PACKED_BEGIN
+#define CC_PACKED_END
+#define CC_STATIC_ASSERT(e)   _Static_assert(e, #e)
+#define CC_INLINE             static inline __attribute__((always_inline))
+#define CC_UNUSED(x)          (void)(x)
+
 typedef uint64_t os_tick_t;
 
 /* Opaque handles — defined in osal_linux.c */
