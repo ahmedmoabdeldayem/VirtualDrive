@@ -48,9 +48,10 @@ do_install() {
     install -m 0644 ${S}/osal.h               ${D}${includedir}/
     install -m 0644 ${S}/osal_log.h           ${D}${includedir}/
     install -m 0644 ${S}/pnal_sys.h           ${D}${includedir}/
-    install -m 0644 ${B}/pnet_options.h       ${D}${includedir}/
-    install -m 0644 ${B}/pnet_version.h       ${D}${includedir}/
-    install -m 0644 ${B}/pnet_export.h        ${D}${includedir}/
+    install -m 0644 ${B}/pnet_options.h           ${D}${includedir}/
+    install -m 0644 ${B}/pnet_version.h           ${D}${includedir}/
+    install -m 0644 ${S}/include/pnet_export.h    ${D}${includedir}/
+    install -m 0644 ${S}/include/pnal_config.h    ${D}${includedir}/
 }
 
 ALLOW_EMPTY:${PN} = "1"
