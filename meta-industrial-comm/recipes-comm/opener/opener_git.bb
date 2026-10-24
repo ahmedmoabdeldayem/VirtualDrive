@@ -3,7 +3,7 @@ DESCRIPTION = "EIPStackGroup OpENer EtherNet/IP adapter-side stack. Provides CIP
 and assembly object management and the network I/O handler used by drive-simulator \
 for the EtherNet/IP protocol adapter."
 LICENSE = "MIT"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=1dece7821bf3fd70fe1309eaa37d52a2"
+LIC_FILES_CHKSUM = "file://license.txt;md5=1bcf1e0089eb17f230f34b422a76b709"
 
 SRC_URI = "git://github.com/EIPStackGroup/OpENer.git;protocol=https;branch=master"
 SRCREV = "d8820ef41ce30dda06d213438ba81c81de33ffe2"
