@@ -22,7 +22,7 @@ EXTRA_OECMAKE = " \
     -DOpENer_PLATFORM=POSIX \
     -DOpENer_BUILDSUPPORT_DIR=${S}/source/buildsupport \
     -DCMAKE_INSTALL_PREFIX=${prefix} \
-    -DOpENer_TESTS=ON \
+    -DCMAKE_INSTALL_FULL_BINDIR=${bindir} \
 "
 
 # OpENer's CMake install puts headers under include/opener/
