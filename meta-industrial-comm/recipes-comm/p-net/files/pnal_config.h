@@ -3,6 +3,7 @@
  * before the API structs are declared. */
 #pragma once
 
+#include <stddef.h>
 #include <stdint.h>
 
 /* Maximum Ethernet frame payload size (excluding FCS) */
