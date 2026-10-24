@@ -9,6 +9,8 @@ SRC_URI = "git://github.com/EIPStackGroup/OpENer.git;protocol=https;branch=maste
 SRCREV = "d8820ef41ce30dda06d213438ba81c81de33ffe2"
 PV = "2.0+git${SRCPV}"
 
+DEPENDS = "libcap"
+
 S = "${WORKDIR}/git"
 
 OECMAKE_SOURCEPATH = "${S}/source"
