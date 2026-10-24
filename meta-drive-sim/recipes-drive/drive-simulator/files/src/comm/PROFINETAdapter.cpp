@@ -40,16 +40,16 @@ static int cb_read(pnet_t* /*n*/, void* /*a*/, uint32_t arep, uint32_t /*api*/,
     return PROFINETAdapter::instance()
         ? PROFINETAdapter::instance()->onRead(arep, slot, sub, idx, pp, pl) : 0;
 }
-static int cb_exp_module(pnet_t*,void*,uint32_t,uint32_t,uint16_t,uint32_t,uint32_t) { return 0; }
-static int cb_exp_submodule(pnet_t*,void*,uint32_t,uint32_t,uint16_t,uint16_t,
+static int cb_exp_module(pnet_t*,void*,uint32_t,uint16_t,uint32_t) { return 0; }
+static int cb_exp_submodule(pnet_t*,void*,uint32_t,uint16_t,uint16_t,
                              uint32_t,uint32_t,const pnet_data_cfg_t*) { return 0; }
-static int cb_new_data_status(pnet_t*,void*,uint32_t,uint32_t,uint8_t) { return 0; }
-static int cb_alarm_ind(pnet_t*,void*,uint32_t,uint32_t,uint16_t,uint16_t,
-                        uint16_t,uint16_t,const pnet_alarm_argument_t*,
+static int cb_new_data_status(pnet_t*,void*,uint32_t,uint32_t,uint8_t,uint8_t) { return 0; }
+static int cb_alarm_ind(pnet_t*,void*,uint32_t,const pnet_alarm_argument_t*,
                         uint16_t,uint16_t,const uint8_t*) { return 0; }
-static void cb_state(pnet_t* /*n*/, void* /*a*/, uint32_t arep, pnet_event_values_t ev) {
+static int cb_state(pnet_t* /*n*/, void* /*a*/, uint32_t arep, pnet_event_values_t ev) {
     if (PROFINETAdapter::instance())
         PROFINETAdapter::instance()->onState(arep, static_cast<int>(ev));
+    return 0;
 }
 static int cb_alarm_cnf(pnet_t*,void*,uint32_t,const pnet_pnio_status_t*) { return 0; }
 static int cb_alarm_ack(pnet_t*,void*,uint32_t,int) { return 0; }
