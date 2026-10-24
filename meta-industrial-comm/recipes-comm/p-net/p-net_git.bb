@@ -2,8 +2,8 @@ SUMMARY = "p-net — PROFINET IO-Device stack"
 DESCRIPTION = "rt-labs p-net PROFINET IO-Device library. Implements a full PROFINET \
 IO-Device with cyclic I/O, alarms, and parameter access. Used by drive-simulator \
 for the PROFINET protocol adapter."
-LICENSE = "BSD-3-Clause & GPL-3.0-only"
-LIC_FILES_CHKSUM = "file://LICENSE.md;md5=18ec3e32f47f5e0cabd3f643e6c08e1e"
+LICENSE = "GPL-3.0-only"
+LIC_FILES_CHKSUM = "file://LICENSE.md;md5=330d642920859963c7f034356f2b3993"
 
 SRC_URI = "git://github.com/rtlabs-com/p-net.git;protocol=https;branch=public"
 SRCREV = "ca4f37c5d66b5378a8cf9349b9084df0612043da"
