@@ -2,7 +2,7 @@ SUMMARY = "SOES — Simple Open EtherCAT Slave stack"
 DESCRIPTION = "EtherCAT slave stack implementing CiA 301 object dictionary and process \
 data exchange. Provides ecat_slv_init/ecat_slv_poll API used by drive-simulator."
 LICENSE = "GPL-2.0-only"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=b234ee4d69f5fce4486a80fdaf4a4263"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=d86f4cd7b881c753fe81c48d2fb8baf4"
 
 SRC_URI = "git://github.com/OpenEtherCATsociety/SOES.git;protocol=https;branch=master"
 SRCREV = "6ef7b9415e936c061ad30626ca00004bdde2ac62"
