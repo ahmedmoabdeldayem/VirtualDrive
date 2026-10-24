@@ -35,14 +35,12 @@ do_configure:prepend() {
 }
 
 # OpENer's CMake install puts headers under include/opener/
-do_install:append() {
+do_install() {
     install -d ${D}${libdir}
-    find ${B} -name "libEIPStack.a" -exec install -m 0644 {} ${D}${libdir}/ \;
-    find ${B} -name "libopener.a"   -exec install -m 0644 {} ${D}${libdir}/ \;
+    find ${B} -name "*.a" -exec install -m 0644 {} ${D}${libdir}/ \;
 
     install -d ${D}${includedir}/opener
-    # Collect all public CIP headers
-    for dir in ${S}/source/src/cip ${S}/source/src ${S}/source/ports/POSIX; do
+    for dir in ${S}/source/src/cip ${S}/source/src ${S}/source/src/ports/POSIX; do
         find $dir -maxdepth 1 -name "*.h" \
             -exec install -m 0644 {} ${D}${includedir}/opener/ \; 2>/dev/null || true
     done
