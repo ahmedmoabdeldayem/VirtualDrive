@@ -21,6 +21,7 @@ EXTRA_OECMAKE = " \
     -DCMAKE_BUILD_TYPE=Release \
     -DBUILD_SHARED_LIBS=OFF \
     -DOPENER_PLATFORM=POSIX \
+    -DOpENer_BUILDSUPPORT_DIR=${S}/source/buildsupport \
     -DCMAKE_INSTALL_PREFIX=${prefix} \
 "
 
