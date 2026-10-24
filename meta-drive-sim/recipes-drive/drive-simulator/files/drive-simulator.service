@@ -6,15 +6,13 @@ Wants=network-online.target
 
 [Service]
 Type=simple
+# Disable RT throttling so SCHED_FIFO threads can run without cgroup budget limits.
+# Required when CONFIG_RT_GROUP_SCHED=y (our kernel config) and systemd does not
+# allocate cpu.rt_runtime_us to the service cgroup.
+ExecStartPre=-/sbin/sysctl -w kernel.sched_rt_runtime_us=-1
 ExecStart=/usr/bin/drive-simulator --protocol ethercat --interface eth0
 Restart=on-failure
 RestartSec=5s
-
-# Real-time scheduling: SCHED_FIFO priority 50 for the service process itself.
-# The cyclic RT thread inside the process will escalate to priority 80 via
-# pthread_setschedparam. This baseline ensures fast startup recovery.
-CPUSchedulingPolicy=fifo
-CPUSchedulingPriority=50
 
 # Memory locking: the cyclic thread calls mlockall() but the service also
 # needs the capability to do so

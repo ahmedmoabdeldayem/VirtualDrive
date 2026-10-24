@@ -21,9 +21,11 @@ struct DriveStatus {
 };
 
 // Minimal HTTP/1.0 server on port 8080 using only POSIX sockets.
-// Serves two endpoints:
-//   GET /status  -> JSON with current drive telemetry
-//   GET /health  -> "OK" or "FAULT: <reason>"
+// Endpoints:
+//   GET /status               -> JSON with current drive telemetry
+//   GET /health               -> "OK" or "FAULT: <reason>"
+//   GET /control?cw=N         -> set CiA 402 controlWord (decimal)
+//   GET /control?cw=N&speed=M -> set controlWord + target speed (RPM)
 class DriveMonitor {
 public:
     explicit DriveMonitor(uint16_t port = 8080);
@@ -38,6 +40,12 @@ public:
     // Called from the cyclic thread each tick; must be wait-free.
     void update(const DriveStatus& status);
 
+    // HTTP control interface — used by DriveSimulator when no fieldbus master
+    // is driving the control word. Written by the HTTP thread, read by cyclic.
+    bool     hasHttpCommand()    const;
+    uint16_t popHttpControlWord();
+    float    getHttpTargetSpeed() const;
+
 private:
     static void* threadEntry(void* arg);
     void serve();
@@ -50,4 +58,8 @@ private:
 
     mutable std::mutex mutex_;
     DriveStatus        status_;
+
+    std::atomic<uint16_t> httpCw_        {0};
+    std::atomic<bool>     httpCwPending_ {false};
+    std::atomic<uint32_t> httpSpeedX10_  {0};
 };
