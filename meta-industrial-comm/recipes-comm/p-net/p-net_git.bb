@@ -6,7 +6,7 @@ LICENSE = "BSD-3-Clause & GPL-3.0-only"
 LIC_FILES_CHKSUM = "file://LICENSE.md;md5=18ec3e32f47f5e0cabd3f643e6c08e1e"
 
 SRC_URI = "git://github.com/rtlabs-com/p-net.git;protocol=https;branch=main"
-SRCREV = "${AUTOREV}"
+SRCREV = "ca4f37c5d66b5378a8cf9349b9084df0612043da"
 PV = "1.0+git${SRCPV}"
 
 S = "${WORKDIR}/git"
