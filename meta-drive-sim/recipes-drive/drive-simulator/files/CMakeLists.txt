@@ -30,8 +30,14 @@ find_library(PNET_LIB  NAMES pnet  PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}
 find_path(PNET_INC     NAMES pnet_api.h
           PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include NO_DEFAULT_PATH QUIET)
 
-find_library(OPENER_LIB NAMES EIPStack opener
+# OpENer builds multiple libraries — find the main CIP stack library
+find_library(OPENER_LIB NAMES CIP
              PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH QUIET)
+find_library(OPENER_ENET_LIB  NAMES ENET_ENCAP   PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH QUIET)
+find_library(OPENER_POSIX_LIB NAMES POSIXPLATFORM PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH QUIET)
+find_library(OPENER_GEN_LIB   NAMES PLATFORM_GENERIC PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH QUIET)
+find_library(OPENER_UTILS_LIB NAMES Utils         PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH QUIET)
+find_library(OPENER_NVDATA_LIB NAMES NVDATA        PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/lib NO_DEFAULT_PATH QUIET)
 find_path(OPENER_INC   NAMES opener_api.h
           PATHS ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include/opener
                 ${CMAKE_SYSROOT}${CMAKE_INSTALL_PREFIX}/include
@@ -85,7 +91,14 @@ endif()
 if(OPENER_LIB AND OPENER_INC)
     target_compile_definitions(drive-simulator PRIVATE HAVE_OPENER=1)
     target_include_directories(drive-simulator PRIVATE ${OPENER_INC})
-    target_link_libraries(drive-simulator PRIVATE ${OPENER_LIB})
+    target_link_libraries(drive-simulator PRIVATE
+        ${OPENER_LIB}
+        ${OPENER_ENET_LIB}
+        ${OPENER_POSIX_LIB}
+        ${OPENER_GEN_LIB}
+        ${OPENER_UTILS_LIB}
+        ${OPENER_NVDATA_LIB}
+    )
     message(STATUS "EtherNet/IP : full OpENer integration")
 else()
     message(STATUS "EtherNet/IP : stub mode (OpENer not found)")
