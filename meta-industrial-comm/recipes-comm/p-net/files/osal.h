@@ -19,6 +19,7 @@ extern "C" {
 #define CC_INLINE             static inline __attribute__((always_inline))
 #define CC_UNUSED(x)          (void)(x)
 #define CC_ASSERT(e)          do { if (!(e)) { __builtin_trap(); } } while (0)
+#define CC_ALIGNED(n)         __attribute__((aligned(n)))
 
 /* Utility macros */
 #define BIT(n)                (1U << (n))
