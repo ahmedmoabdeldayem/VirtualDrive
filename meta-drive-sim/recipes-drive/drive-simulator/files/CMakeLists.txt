@@ -89,7 +89,11 @@ else()
 endif()
 
 if(OPENER_LIB AND OPENER_INC)
-    target_compile_definitions(drive-simulator PRIVATE HAVE_OPENER=1)
+    target_compile_definitions(drive-simulator PRIVATE
+        HAVE_OPENER=1
+        PC_OPENER_ETHERNET_BUFFER_SIZE=512
+        RESTRICT=          # C++ doesn't support restrict — define it away
+    )
     target_include_directories(drive-simulator PRIVATE ${OPENER_INC})
     target_link_libraries(drive-simulator PRIVATE
         ${OPENER_LIB}
