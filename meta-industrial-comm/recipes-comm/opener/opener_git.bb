@@ -22,8 +22,15 @@ EXTRA_OECMAKE = " \
     -DOpENer_PLATFORM=POSIX \
     -DOpENer_BUILDSUPPORT_DIR=${S}/source/buildsupport \
     -DCMAKE_INSTALL_PREFIX=${prefix} \
-    -DCMAKE_INSTALL_FULL_BINDIR=${bindir} \
 "
+
+# Remove the sample executable's install rule before cmake runs —
+# it references CMAKE_INSTALL_FULL_BINDIR which is only set by GNUInstallDirs
+# and upstream never calls include(GNUInstallDirs).
+do_configure:prepend() {
+    sed -i '/install.*PROGRAMS.*OpENer.*DESTINATION/d' \
+        ${S}/source/src/ports/POSIX/CMakeLists.txt
+}
 
 # OpENer's CMake install puts headers under include/opener/
 do_install:append() {
