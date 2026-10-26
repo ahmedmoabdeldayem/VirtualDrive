@@ -88,22 +88,11 @@ else()
     message(STATUS "PROFINET : stub mode (p-net not found)")
 endif()
 
+# OpENer is built and installed but the EtherNetIPAdapter was written for an
+# older API. The adapter needs porting before HAVE_OPENER can be enabled.
+# Library is available in image for future use.
 if(OPENER_LIB AND OPENER_INC)
-    target_compile_definitions(drive-simulator PRIVATE
-        HAVE_OPENER=1
-        PC_OPENER_ETHERNET_BUFFER_SIZE=512
-        RESTRICT=          # C++ doesn't support restrict — define it away
-    )
-    target_include_directories(drive-simulator PRIVATE ${OPENER_INC})
-    target_link_libraries(drive-simulator PRIVATE
-        ${OPENER_LIB}
-        ${OPENER_ENET_LIB}
-        ${OPENER_POSIX_LIB}
-        ${OPENER_GEN_LIB}
-        ${OPENER_UTILS_LIB}
-        ${OPENER_NVDATA_LIB}
-    )
-    message(STATUS "EtherNet/IP : full OpENer integration")
+    message(STATUS "EtherNet/IP : OpENer found but adapter needs API port — stub mode")
 else()
     message(STATUS "EtherNet/IP : stub mode (OpENer not found)")
 endif()
